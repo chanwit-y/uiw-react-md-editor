@@ -16,13 +16,14 @@ const CustomBoldIcon = () => (
 const customBoldCommand = {
   name: "bold",
   keyCommand: "bold",
-  buttonProps: { "aria-label": "Bold" },
+  buttonProps: { "aria-label": "Bold (Ctrl+B)" },
   icon: <CustomBoldIcon />, // Use the custom bold icon
   execute: (state: { selectedText: any; }, api: { replaceSelection: (arg0: string) => void; }) => {
     // Define the action for bold command
     let modifyText = `**${state.selectedText || "Bold Text"}**`;
     api.replaceSelection(modifyText);
   },
+  shortcuts: "ctrl+b", // Add keyboard shortcut
 };
 
 
