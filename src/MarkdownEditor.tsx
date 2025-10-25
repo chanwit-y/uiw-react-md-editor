@@ -116,7 +116,19 @@ export default function MarkdownEditor() {
     x: 0,
     y: 0
   });
+  const [selectionPopover, setSelectionPopover] = useState<{
+    visible: boolean;
+    content: string;
+    x: number;
+    y: number;
+  }>({
+    visible: false,
+    content: '',
+    x: 0,
+    y: 0
+  });
   const popoverRef = useRef<HTMLDivElement>(null);
+  const selectionPopoverRef = useRef<HTMLDivElement>(null);
 
   // Handle popover events
   useEffect(() => {
@@ -141,13 +153,83 @@ export default function MarkdownEditor() {
       }
     };
 
+    // Handle text selection in the editor
+    const handleSelectionChange = () => {
+      const selection = window.getSelection();
+      if (selection && selection.toString().trim().length > 0) {
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        const selectedText = selection.toString().trim();
+        
+        // For debugging: show popover for any selection first
+        // TODO: Restrict to editor area once working
+        setSelectionPopover({
+          visible: true,
+          content: `Selected: "${selectedText}"`,
+          x: rect.left + rect.width / 2,
+          y: rect.top - 45
+        });
+        
+        // Check if selection is within the markdown editor
+        const editorContainer = document.querySelector('.w-md-editor');
+        const isInEditor = editorContainer && (
+          editorContainer.contains(range.commonAncestorContainer) ||
+          editorContainer.contains(range.startContainer) ||
+          editorContainer.contains(range.endContainer)
+        );
+        
+        // If not in editor, hide the popover
+        if (!isInEditor) {
+          setSelectionPopover(prev => ({ ...prev, visible: false }));
+        }
+      } else {
+        setSelectionPopover(prev => ({ ...prev, visible: false }));
+      }
+    };
+
+    // Handle mouse up events for text selection
+    const handleMouseUp = () => {
+      // Small delay to ensure selection is complete
+      setTimeout(() => {
+        handleSelectionChange();
+      }, 10);
+    };
+
     // Add event listeners to the document
     document.addEventListener('mouseover', handleMouseOver);
     document.addEventListener('mouseout', handleMouseOut);
+    document.addEventListener('selectionchange', handleSelectionChange);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    // Also add event listeners specifically to the editor when it's available
+    const addEditorListeners = () => {
+      const editorContainer = document.querySelector('.w-md-editor');
+      if (editorContainer) {
+        editorContainer.addEventListener('mouseup', handleMouseUp as EventListener);
+        editorContainer.addEventListener('selectstart', () => {
+          // Clear any existing selection popover when starting a new selection
+          setSelectionPopover(prev => ({ ...prev, visible: false }));
+        });
+      }
+    };
+
+    // Try to add editor listeners immediately and also after a delay
+    addEditorListeners();
+    const timeoutId = setTimeout(addEditorListeners, 1000);
 
     return () => {
       document.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseout', handleMouseOut);
+      document.removeEventListener('selectionchange', handleSelectionChange);
+      document.removeEventListener('mouseup', handleMouseUp);
+      
+      const editorContainer = document.querySelector('.w-md-editor');
+      if (editorContainer) {
+        editorContainer.removeEventListener('mouseup', handleMouseUp as EventListener);
+        editorContainer.removeEventListener('selectstart', () => {});
+      }
+      
+      clearTimeout(timeoutId);
     };
   }, []);
 
@@ -229,7 +311,7 @@ You can highlight ??important information?? or ??key concepts?? in your document
         {`
         body .w-md-editor-text-pre > code,
         body .w-md-editor-text-input {
-            font-size: .9rem !important;
+            // font-size: .9rem !important;
         }
 
         .code-line {
@@ -241,8 +323,8 @@ You can highlight ??important information?? or ??key concepts?? in your document
         .token.title.important {
            letter-spacing: 0.5px !important;
            color: #4E61D3 !important;
-           font-size: 0.85rem !important;
-           font-weight: 600 !important;
+          //  font-size: 0.85rem !important;
+          //  font-weight: 600 !important;
         }
 
         .token.strike {
@@ -251,8 +333,8 @@ You can highlight ??important information?? or ??key concepts?? in your document
         }
 
         .token.bold > .token.content {
-           font-size: 0.85rem !important;
-           font-weight: 600 !important;
+          //  font-size: 0.85rem !important;
+          //  font-weight: 600 !important;
            color: #B6771D !important;
         }
         
@@ -289,6 +371,30 @@ You can highlight ??important information?? or ??key concepts?? in your document
           border: 5px solid transparent;
           border-top-color: #333;
         }
+
+        .selection-popover {
+          position: fixed;
+          background: #4E61D3;
+          color: white;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 14px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          z-index: 1001;
+          pointer-events: none;
+          max-width: 300px;
+          word-wrap: break-word;
+        }
+
+        .selection-popover::after {
+          content: '';
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          border: 5px solid transparent;
+          border-top-color: #4E61D3;
+        }
           
         `}
       </style>
@@ -324,6 +430,21 @@ You can highlight ??important information?? or ??key concepts?? in your document
           }}
         >
           {popover.content}
+        </div>
+      )}
+
+      {/* Selection Popover Component */}
+      {selectionPopover.visible && (
+        <div
+          ref={selectionPopoverRef}
+          className="selection-popover"
+          style={{
+            left: selectionPopover.x,
+            top: selectionPopover.y,
+            transform: 'translateX(-50%)'
+          }}
+        >
+          {selectionPopover.content}
         </div>
       )}
     </div>
