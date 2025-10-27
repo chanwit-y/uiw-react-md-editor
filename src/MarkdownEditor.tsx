@@ -161,7 +161,7 @@ export default function MarkdownEditor() {
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         const selectedText = selection.toString().trim();
-        
+
         // For debugging: show popover for any selection first
         // TODO: Restrict to editor area once working
         setSelectionPopover({
@@ -170,7 +170,7 @@ export default function MarkdownEditor() {
           x: rect.left + rect.width / 2,
           y: rect.top - 45
         });
-        
+
         // Check if selection is within the markdown editor
         const editorContainer = document.querySelector('.w-md-editor');
         const isInEditor = editorContainer && (
@@ -178,7 +178,7 @@ export default function MarkdownEditor() {
           editorContainer.contains(range.startContainer) ||
           editorContainer.contains(range.endContainer)
         );
-        
+
         // If not in editor, hide the popover
         if (!isInEditor) {
           setSelectionPopover(prev => ({ ...prev, visible: false }));
@@ -223,13 +223,13 @@ export default function MarkdownEditor() {
       document.removeEventListener('mouseout', handleMouseOut);
       document.removeEventListener('selectionchange', handleSelectionChange);
       document.removeEventListener('mouseup', handleMouseUp);
-      
+
       const editorContainer = document.querySelector('.w-md-editor');
       if (editorContainer) {
         editorContainer.removeEventListener('mouseup', handleMouseUp as EventListener);
-        editorContainer.removeEventListener('selectstart', () => {});
+        editorContainer.removeEventListener('selectstart', () => { });
       }
-      
+
       clearTimeout(timeoutId);
     };
   }, []);
@@ -300,29 +300,32 @@ You can highlight ??important information?? or ??key concepts?? in your document
 `);
 
 
-        // .token.title.important {
-        //    color: red !important;
-        //    line-height: 1.2;
-        //    font-size: 15px !important;
-        //    font-weight: 600 !important;
-        // }
+  // .token.title.important {
+  //    color: red !important;
+  //    line-height: 1.2;
+  //    font-size: 15px !important;
+  //    font-weight: 600 !important;
+  // }
   return (
-    <div style={{ padding: '10px', width: '1200px', letterSpacing: 0.5, margin: '0 auto' }}>
+    <div style={{ padding: '10px', width: '1200px', margin: '0 auto' }}>
       <style>
         {`
         body .w-md-editor-text-pre > code,
         body .w-md-editor-text-input {
-            // font-size: .9rem !important;
+            // font-size: 1rem !important;
+            font-size: 0.9rem !important;
+            letter-spacing: 0.6px !important;
+            line-height: 1.8 !important;
         }
 
         .code-line {
-           font-size: 0.85rem !important;
-           letter-spacing: 0.70px !important;
+          //  font-size: 0.85rem !important;
+          //  letter-spacing: 0.70px !important;
            color: #333 !important;
         }
 
         .token.title.important {
-           letter-spacing: 0.5px !important;
+          //  letter-spacing: 0.5px !important;
            color: #4E61D3 !important;
           //  font-size: 0.85rem !important;
           //  font-weight: 600 !important;
@@ -409,16 +412,44 @@ You can highlight ??important information?? or ??key concepts?? in your document
         preview="live"
         data-color-mode="light"
         visibleDragbar={false}
+
+        // textareaProps={{
+
+        //   // renderTextarea: renderCustomTextarea,
+        // }}
         previewOptions={{
           rehypePlugins: [rehypeKatex, rehypeHighlight],
-          remarkPlugins: [remarkMath, remarkHighlight]
+          remarkPlugins: [remarkMath, remarkHighlight],
+          components: {
+            // textarea: ({ node, ...props }) => {
+            //   console.log(node)
+            //   return <textarea style={{ fontSize: '.95rem' }} {...props} />
+            // },
+            h1: ({ node, ...props }) => (
+              <h1 style={{ color: 'red', fontSize: '2rem' }} {...props} />
+            ),
+            p: ({ node, ...props }) => (
+              <p style={{ color: 'blue', fontSize: '.95rem' }} {...props} />
+            ),
+            code: ({ inline, node, ...props }: any) => (
+              <code
+                style={{
+                  backgroundColor: inline ? 'lightgray' : 'transparent',
+                  padding: '0.2rem 0.4rem',
+                  borderRadius: '4px',
+                }}
+                {...props}
+              />
+            ),
+          }
         }}
+
         commands={[customBoldCommand, commands.italic, commands.link, commands.code]} // Use custom bold command with new icon
         hideToolbar={false}
       />
       <hr />
       <pre>{JSON.stringify(value, null, 2)}</pre>
-      
+
       {/* Popover Component */}
       {popover.visible && (
         <div
