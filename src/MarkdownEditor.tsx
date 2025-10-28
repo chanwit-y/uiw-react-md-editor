@@ -350,13 +350,11 @@ You can highlight ??important information?? or ??key concepts?? in your document
           color: #BF092F !important;
         }
 
-        .token.bold > .token.content {
-           color: #B6771D !important;
+        .token.bold > .token.content,
+        .token.bold > .token.punctuation {
+          color: #B6771D !important;
         }
 
-        .token.bold > .token.punctuation {
-           color: #B6771D !important;
-        }
 
         .token.italic > .token.content {
            color: #FA812F !important;
@@ -450,7 +448,7 @@ You can highlight ??important information?? or ??key concepts?? in your document
             //   return <textarea style={{ fontSize: '.95rem' }} {...props} />
             // },
             h1: ({ node, ...props }) => (
-              <h1 style={{ color: 'red', fontSize: '2rem' }} {...props} />
+              <h1 style={{ color: '#636CCB', fontSize: '2rem' }} {...props} />
             ),
             p: ({ node, ...props }) => (
               <p style={{ color: '#37353E', fontSize: '.95rem' }} {...props} />
