@@ -319,17 +319,31 @@ You can highlight ??important information?? or ??key concepts?? in your document
         }
 
         .code-line {
-          //  font-size: 0.85rem !important;
-          //  letter-spacing: 0.70px !important;
            color: #333 !important;
         }
 
         .token.title.important {
-          //  letter-spacing: 0.5px !important;
-           color: #4E61D3 !important;
-          //  font-size: 0.85rem !important;
-          //  font-weight: 600 !important;
+           color: #636CCB !important;
         }
+
+        .token.title.important > .token.punctuation {
+           color: #636CCB !important;
+        }
+
+
+        .code-line > .token.url {
+           color: #EF7722 !important;
+        }
+
+        .token.url > .token.url {
+           color: #0BA6DF !important;
+        }
+
+        .token.url > .token.content {
+           color: #0BA6DF !important;
+        }
+
+
 
         .token.strike {
           text-decoration: line-through !important;
@@ -337,9 +351,19 @@ You can highlight ??important information?? or ??key concepts?? in your document
         }
 
         .token.bold > .token.content {
-          //  font-size: 0.85rem !important;
-          //  font-weight: 600 !important;
            color: #B6771D !important;
+        }
+
+        .token.bold > .token.punctuation {
+           color: #B6771D !important;
+        }
+
+        .token.italic > .token.content {
+           color: #FA812F !important;
+        }
+
+        .token.italic > .token.punctuation {
+           color: #FA812F !important;
         }
         
         .custom-highlight {
@@ -429,7 +453,10 @@ You can highlight ??important information?? or ??key concepts?? in your document
               <h1 style={{ color: 'red', fontSize: '2rem' }} {...props} />
             ),
             p: ({ node, ...props }) => (
-              <p style={{ color: 'blue', fontSize: '.95rem' }} {...props} />
+              <p style={{ color: '#37353E', fontSize: '.95rem' }} {...props} />
+            ),
+            a: ({ node, ...props }) => (
+              <a style={{ color: '#0BA6DF', fontSize: '.95rem' }} {...props} />
             ),
             code: ({ inline, node, ...props }: any) => (
               <code
