@@ -299,7 +299,6 @@ You can highlight ??important information?? or ??key concepts?? in your document
 > Start writing your markdown here!
 `);
 
-
   // .token.title.important {
   //    color: red !important;
   //    line-height: 1.2;
