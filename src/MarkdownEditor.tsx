@@ -471,8 +471,8 @@ You can highlight ??important information?? or ??key concepts?? in your document
         commands={[customBoldCommand, commands.italic, commands.link, commands.code]} // Use custom bold command with new icon
         hideToolbar={false}
       />
-      <hr />
-      <pre>{JSON.stringify(value, null, 2)}</pre>
+      {/* <hr /> */}
+      {/* <pre>{JSON.stringify(value, null, 2)}</pre> */}
 
       {/* Popover Component */}
       {popover.visible && (
