@@ -12,7 +12,7 @@ const initialNodes = [
 	{
 		id: 'n2',
 		type: 'displayMDNode',
-		position: { x: 0, y: 100 }, data: { label: 'Node 2' }
+		position: { x: 200, y: 100 }, data: { label: 'Node 2' }
 	},
 ];
 const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2' }];
