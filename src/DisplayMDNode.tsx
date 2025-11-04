@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Handle, Position } from '@xyflow/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
@@ -145,8 +146,48 @@ export const DisplayMDNode = (props: any) => {
 
   // (Removed: unused line/scroll helpers)
 
+  const scrollToLine = (lineNumber: number) => {
+    if (!scrollContainerRef.current || !contentRef.current) return;
+    
+    // Split content by newlines to find line 15
+    const lines = content.split('\n');
+    if (lineNumber > lines.length) return;
+    
+    // Get the actual computed styles for accurate calculation
+    const computedStyle = window.getComputedStyle(contentRef.current);
+    const fontSize = parseFloat(computedStyle.fontSize);
+    const lineHeight = parseFloat(computedStyle.lineHeight) || fontSize * 1.5;
+    
+    // Calculate position based on line number
+    // Line 15 means we need to scroll to show line 15 (index 14)
+    const padding = 20; // Top padding of the container
+    const targetScrollPosition = (lineNumber - 1) * lineHeight + padding;
+    
+    // Scroll to the target position
+    scrollContainerRef.current.scrollTo({
+      top: Math.max(0, targetScrollPosition - 20), // Offset by 20px for better visibility
+      behavior: 'smooth'
+    });
+  };
+
+  const handleSourceClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    scrollToLine(15);
+  };
+
   return (
     <div style={{ position: 'relative' }}>
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{ 
+          background: '#FF69B4', 
+          width: '12px', 
+          height: '12px', 
+          border: '2px solid #fff',
+          borderRadius: '2px'
+        }}
+      />
       <div
         className="node-header node-drag-handle"
         style={{
@@ -173,8 +214,8 @@ export const DisplayMDNode = (props: any) => {
           border: '1px solid #ccc',
           borderRadius: '0 0 10px 10px',
           padding: '20px',
-          width: '200px',
-          height: '200px',
+          width: '400px',
+          height: '500px',
           overflowY: 'auto', // changed from 'scroll' to 'auto' for smoother behavior
           position: 'relative',
           // background: '#fff',
@@ -201,25 +242,56 @@ export const DisplayMDNode = (props: any) => {
               h1: ({ node, ...props }) => (
                 <h1 style={{ color: '#636CCB', fontSize: '0.95rem', margin: '0.5em 0' }} {...props} />
               ),
+              h2: ({ node, ...props }) => (
+                <h2 style={{  fontSize: '0.90rem', margin: '0.5em 0' }} {...props} />
+              ),
               p: ({ node, ...props }) => (
                 <p style={{ color: '#37353E', fontSize: '0.8rem', margin: '0.4em 0' }} {...props} />
               ),
               a: ({ node, ...props }) => (
                 <a style={{ color: '#0BA6DF', fontSize: '0.8rem' }} {...props} />
               ),
-              code: ({ inline, node, className, children, ...props }: any) => (
-                <code
-                  className={className}
+              code: ({ inline, node, className, children, ...props }: any) => {
+                // Determine if this is inline code or a code block
+                const isCodeBlock = !inline;
+                return (
+                  <code
+                    className={className}
+                    style={{
+                      backgroundColor: inline ? '#f4f4f4' : '#f8f8f8',
+                      color: inline ? '#e83e8c' : '#333',
+                      padding: inline ? '0.2rem 0.4rem' : '0',
+                      fontSize: inline ? '0.85em' : '0.8em',
+                      borderRadius: '4px',
+                      fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+                      fontWeight: inline ? 'normal' : 'normal',
+                      display: inline ? 'inline' : 'block',
+                      border: inline ? 'none' : '1px solid #e1e4e8',
+                      overflowX: isCodeBlock ? 'auto' : 'visible',
+                    }}
+                    {...props}
+                  >
+                    {children}
+                  </code>
+                );
+              },
+              pre: ({ node, children, ...props }: any) => (
+                <pre
                   style={{
-                    backgroundColor: inline ? 'lightgray' : '#f5f5f5',
-                    padding: inline ? '0.2rem 0.4rem' : '0.3rem 0.5rem',
-                    fontSize: '0.78em',
-                    borderRadius: '4px',
+                    backgroundColor: '#f8f8f8',
+                    border: '1px solid #e1e4e8',
+                    borderRadius: '6px',
+                    padding: '12px',
+                    margin: '0.8em 0',
+                    overflowX: 'auto',
+                    fontSize: '0.8em',
+                    lineHeight: 1.45,
+                    fontFamily: 'Consolas, Monaco, "Courier New", monospace',
                   }}
                   {...props}
                 >
                   {children}
-                </code>
+                </pre>
               ),
               ul: ({ node, ...props }) => (
                 <ul style={{ fontSize: '0.8rem', marginLeft: '1.1em' }} {...props} />
@@ -263,6 +335,19 @@ export const DisplayMDNode = (props: any) => {
           `}
         </style>
       </div>
+      <Handle
+        type="source"
+        position={Position.Right}
+        onClick={handleSourceClick}
+        style={{ 
+          background: '#4169E1', 
+          width: '12px', 
+          height: '12px', 
+          border: '2px solid #fff',
+          borderRadius: '2px',
+          cursor: 'pointer'
+        }}
+      />
     </div>
   );
 }

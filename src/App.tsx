@@ -2,7 +2,7 @@ import './App.css'
 import MarkdownEditor from './MarkdownEditor'
 import DisplayMD from './DisplayMD'
 // import {  ReactFlowProvider } from '@xyflow/react';
-import {MindMap} from "./MindMap"
+import { MindMap } from "./MindMap"
 
 function App() {
   const exampleContent = `# Markdown Display Example
@@ -96,13 +96,13 @@ Use \`console.log()\` for debugging your code.
 
   return (
     <>
-        <MindMap />
+      <MindMap />
       <MarkdownEditor />
-      <div style={{ marginTop: '40px', padding: '20px', maxWidth: '1200px', margin: '40px auto' }}>
+      <div style={{ marginTop: '40px', padding: '20px', maxWidth: '1400px', margin: '40px auto' }}>
         <h1 style={{ marginBottom: '20px', color: '#333' }}>Markdown Display Component</h1>
         <DisplayMD content={exampleContent} />
       </div>
-      </>
+    </>
   )
 }
 

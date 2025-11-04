@@ -12,7 +12,7 @@ const initialNodes = [
 	{
 		id: 'n2',
 		type: 'displayMDNode',
-		position: { x: 200, y: 100 }, data: { label: 'Node 2' }
+		position: { x: 500, y: 200 }, data: { label: 'Node 2' }
 	},
 ];
 const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2' }];
@@ -43,11 +43,12 @@ export const MindMap = () => {
 			<ReactFlow
 				nodes={nodes}
 				edges={edges}
+				defaultViewport={{ x: 30, y: 30, zoom: 0.7 }}
 				nodeTypes={nodeTypes}
 				onNodesChange={onNodesChange}
 				onEdgesChange={onEdgesChange}
 				onConnect={onConnect}
-				fitView
+				// fitView
 			/>
 		</div>
 	);
