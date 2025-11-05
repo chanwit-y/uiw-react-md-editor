@@ -4,6 +4,7 @@ import DisplayMD from './DisplayMD'
 // import {  ReactFlowProvider } from '@xyflow/react';
 import { MindMap } from "./MindMap"
 import { Map } from "./Map"
+import FertileCrescent from './Map2'
 
 function App() {
   const exampleContent = `# Markdown Display Example
@@ -97,7 +98,8 @@ Use \`console.log()\` for debugging your code.
 
   return (
     <>
-      <Map />
+      <FertileCrescent />
+      {/* <Map /> */}
       {/* <MindMap />
       <MarkdownEditor />
       <div style={{ marginTop: '40px', padding: '20px', maxWidth: '1400px', margin: '40px auto' }}>
