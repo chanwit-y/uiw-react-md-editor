@@ -1,104 +1,95 @@
 import './App.css'
-import MarkdownEditor from './MarkdownEditor'
-import DisplayMD from './DisplayMD'
+// import MarkdownEditor from './MarkdownEditor'
+// import DisplayMD from './DisplayMD'
 // import {  ReactFlowProvider } from '@xyflow/react';
-import { MindMap } from "./MindMap"
-import { Map } from "./Map"
-import FertileCrescent from './Map2'
+// import { MindMap } from "./MindMap"
+// import { Map } from "./Map"
+// import FertileCrescent from './Map2'
+import FolderTreeView from './FolderTreeView'
+import type { TreeNode } from './FolderTreeView'
 
 function App() {
-  const exampleContent = `# Markdown Display Example
+  // Example folder tree data
+  const folderTreeData: TreeNode[] = [
+    {
+      name: 'src',
+      type: 'folder',
+      children: [
+        {
+          name: 'components',
+          type: 'folder',
+          children: [
+            { name: 'Button.tsx', type: 'item' },
+            { name: 'Input.tsx', type: 'item' },
+            { name: 'Modal.tsx', type: 'item' },
+            { name: 'Card.tsx', type: 'item' },
+            { name: 'Header.tsx', type: 'item' },
+            { name: 'Footer.tsx', type: 'item' },
+            { name: 'Sidebar.tsx', type: 'item' },
+            {
+              name: 'forms',
+              type: 'folder',
+              children: [
+                { name: 'ContactForm.tsx', type: 'item' },
+                { name: 'LoginForm.tsx', type: 'item' },
+                { name: 'SignupForm.tsx', type: 'item' },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'utils',
+          type: 'folder',
+          children: [
+            { name: 'helpers.ts', type: 'item' },
+            { name: 'constants.ts', type: 'item' },
+            { name: 'formatters.ts', type: 'item' },
+            { name: 'validators.ts', type: 'item' },
+            { name: 'api.ts', type: 'item' },
+          ],
+        },
+        { name: 'App.tsx', type: 'item' },
+        { name: 'main.tsx', type: 'item' },
+      ],
+    },
+    {
+      name: 'public',
+      type: 'folder',
+      children: [
+        { name: 'index.html', type: 'item' },
+        { name: 'favicon.ico', type: 'item' },
+        { name: 'robots.txt', type: 'item' },
+        { name: 'manifest.json', type: 'item' },
+      ],
+    },
+    {
+      name: 'package.json',
+      type: 'item',
+    },
+    {
+      name: 'README.md',
+      type: 'item',
+    },
+  ];
 
-## GitHub Flavored Markdown (GFM)
+  const handleItemClick = (node: TreeNode, path: string[]) => {
+    console.log('Clicked:', node.name, 'Path:', path.join('/'));
+  };
 
-### Tables
-| Feature | Supported | Notes |
-|---------|-----------|-------|
-| Tables | ✓ | Full support |
-| Strikethrough | ~~No~~ ✓ | Now supported |
-| Task Lists | ☐ | Coming soon |
-
-- [x] Completed task
-- [ ] Incomplete task
-- [x] Another completed task
-
-### Strikethrough
-This is ~~strikethrough~~ text.
-
-## Math Support
-
-### Inline Math
-The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$
-
-### Block Math
-$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
-
-More complex equation:
-$$
-\\begin{aligned}
-\\nabla \\times \\vec{\\mathbf{B}} -\\, \\frac1c\\, \\frac{\\partial\\vec{\\mathbf{E}}}{\\partial t} &= \\frac{4\\pi}{c}\\vec{\\mathbf{j}} \\\\
-\\nabla \\cdot \\vec{\\mathbf{E}} &= 4 \\pi \\rho \\\\
-\\end{aligned}
-$$
-
-## Code Blocks
-
-\`\`\`javascript
-function greet(name) {
-  console.log(\`Hello, \${name}!\`);
-  return \`Welcome to Markdown!\`;
-}
-
-greet('World');
-\`\`\`
-
-\`\`\`python
-def fibonacci(n):
-    if n <= 1:
-        return n
-    return fibonacci(n-1) + fibonacci(n-2)
-
-print([fibonacci(i) for i in range(10)])
-\`\`\`
-
-## Links and Images
-
-Visit [React Markdown](https://github.com/remarkjs/react-markdown) for more information.
-
-## Lists
-
-### Unordered List
-- Item 1
-- Item 2
-  - Nested item 2.1
-  - Nested item 2.2
-- Item 3
-
-### Ordered List
-1. First item
-2. Second item
-   1. Nested item 2.1
-   2. Nested item 2.2
-3. Third item
-
-## Blockquote
-
-> This is a blockquote.
-> 
-> It can span multiple lines.
-
-## Emphasis
-
-**Bold text** and *italic text* and ***bold italic text***.
-
-## Inline Code
-
-Use \`console.log()\` for debugging your code.
-`;
 
   return (
     <>
-      <FertileCrescent />
+      <div style={{ padding: '40px', display: 'flex', gap: '40px', alignItems: 'flex-start' }}>
+        <div>
+          <h2 style={{ marginBottom: '20px', color: '#333' }}>Folder Tree View</h2>
+          <FolderTreeView 
+            data={folderTreeData} 
+            onItemClick={handleItemClick}
+            defaultExpanded={false}
+          />
+        </div>
+      </div>
+      {/* <FertileCrescent /> */}
       {/* <Map /> */}
       {/* <MindMap />
       <MarkdownEditor />
